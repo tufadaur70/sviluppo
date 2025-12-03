@@ -1873,34 +1873,6 @@ body {
 }
 
 
-/* PDF BUTTONS STYLING */
-\n.btn-pdf {
-    \n background: linear-gradient(135deg, var(--error-color), var(--error-light));
-    \n color: var(--text-inverse);
-    \n font-size: 0.9em;
-    \n padding: 6px 12px;
-    \n border-radius: var(--radius-md);
-    \n text-decoration: none;
-    \n display: inline-flex;
-    \n align-items: center;
-    \n gap: var(--spacing-xs);
-    \n transition: all var(--transition-standard);
-    \n
-}
-
-\n\n.btn-pdf:hover {
-    \n background: linear-gradient(135deg, var(--error-dark), var(--error-color));
-    \n transform: translateY(-1px);
-    \n box-shadow: var(--shadow-md);
-    \n
-}
-
-\n\n.me-2 {
-    \n margin-right: var(--spacing-sm);
-    \n
-}
-
-\n\n\n
 
 /* FORM EVENTI MIGLIORATI */
 .container-fluid {
@@ -2339,47 +2311,6 @@ body {
     color: var(--text-primary);
 }
 
-.action-select option:hover {
-    background: var(--primary-soft);
-}
-
-/* Stili per le colonne della tabella transazioni aggiornata */
-.table th:nth-child(1) {
-    width: 7%;
-}
-
-/* Id */
-.table th:nth-child(2) {
-    width: 23%;
-}
-
-/* Nome */
-.table th:nth-child(3) {
-    width: 27%;
-}
-
-/* Email */
-.table th:nth-child(4) {
-    width: 10%;
-}
-
-/* Posti */
-.table th:nth-child(5) {
-    width: 13%;
-}
-
-/* Stato */
-.table th:nth-child(6) {
-    width: 8%;
-}
-
-/* Valida */
-.table th:nth-child(7) {
-    width: 12%;
-}
-
-/* Azioni */
-
 /* QUICK VALIDATION BUTTON STYLES */
 .btn-validate-quick {
     background: linear-gradient(135deg, var(--success-color), var(--success-light));
@@ -2423,83 +2354,6 @@ body {
     margin: 0;
 }
 
-/* Responsività per il menu azioni */
-@media (max-width: 768px) {
-    .action-select {
-        font-size: 0.85em;
-        padding: 6px 10px;
-        padding-right: 25px;
-        background-size: 10px;
-        background-position: right 6px center;
-    }
-
-    .table th:nth-child(1) {
-        width: 8%;
-    }
-
-    /* Id */
-    .table th:nth-child(2) {
-        width: 20%;
-    }
-
-    /* Nome */
-    .table th:nth-child(3) {
-        width: 22%;
-    }
-
-    /* Email */
-    .table th:nth-child(4) {
-        width: 12%;
-    }
-
-    /* Posti */
-    .table th:nth-child(5) {
-        width: 15%;
-    }
-
-    /* Stato */
-    .table th:nth-child(6) {
-        width: 8%;
-    }
-
-    /* Valida */
-    .table th:nth-child(7) {
-        width: 15%;
-    }
-
-    /* Azioni */
-
-    .btn-validate-quick {
-        width: 28px;
-        height: 28px;
-        font-size: 0.9em;
-    }
-}
-
-@media (max-width: 480px) {
-    .action-select {
-        font-size: 0.8em;
-        padding: 5px 8px;
-        padding-right: 22px;
-        background-size: 8px;
-        background-position: right 5px center;
-    }
-
-    .btn-validate-quick {
-        width: 24px;
-        height: 24px;
-        font-size: 0.8em;
-    }
-
-    /* Su mobile, nascondi email e mostra solo iniziali */
-    .table td:nth-child(3) {
-        max-width: 80px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
-}
-
 /* DASHBOARD ACTIONS DROPDOWN STYLES */
 .dashboard-actions-dropdown {
     width: 100%;
@@ -2538,59 +2392,106 @@ body {
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
-.action-select-dashboard option {
-    padding: 8px 12px;
-    background: var(--bg-secondary);
-    color: var(--text-primary);
+/* TABLE COLUMN WIDTHS - CONSOLIDATED */
+/* Transactions Table (7 columns) */
+.transactions-table .table th:nth-child(1),
+.table-wrapper:has(.transactions-table) .table th:nth-child(1) {
+    width: 7%;
 }
 
-.action-select-dashboard option:hover {
-    background: var(--primary-soft);
+/* Id */
+.transactions-table .table th:nth-child(2),
+.table-wrapper:has(.transactions-table) .table th:nth-child(2) {
+    width: 25%;
 }
 
-/* Dashboard table columns */
-.table th:nth-child(1) {
+/* Nome */
+.transactions-table .table th:nth-child(3),
+.table-wrapper:has(.transactions-table) .table th:nth-child(3) {
+    width: 28%;
+}
+
+/* Email */
+.transactions-table .table th:nth-child(4),
+.table-wrapper:has(.transactions-table) .table th:nth-child(4) {
+    width: 10%;
+}
+
+/* Posti */
+.transactions-table .table th:nth-child(5),
+.table-wrapper:has(.transactions-table) .table th:nth-child(5) {
+    width: 12%;
+}
+
+/* Stato */
+.transactions-table .table th:nth-child(6),
+.table-wrapper:has(.transactions-table) .table th:nth-child(6) {
+    width: 8%;
+}
+
+/* Valida */
+.transactions-table .table th:nth-child(7),
+.table-wrapper:has(.transactions-table) .table th:nth-child(7) {
+    width: 10%;
+}
+
+/* Azioni */
+
+/* Dashboard Table (8 columns) */
+.dashboard-table .table th:nth-child(1),
+.table-wrapper:has(.dashboard-table) .table th:nth-child(1) {
     width: 25%;
 }
 
 /* Evento */
-.table th:nth-child(2) {
+.dashboard-table .table th:nth-child(2),
+.table-wrapper:has(.dashboard-table) .table th:nth-child(2) {
     width: 12%;
 }
 
 /* Data */
-.table th:nth-child(3) {
+.dashboard-table .table th:nth-child(3),
+.table-wrapper:has(.dashboard-table) .table th:nth-child(3) {
     width: 10%;
 }
 
 /* Stato */
-.table th:nth-child(4) {
+.dashboard-table .table th:nth-child(4),
+.table-wrapper:has(.dashboard-table) .table th:nth-child(4) {
     width: 10%;
 }
 
 /* Venduti */
-.table th:nth-child(5) {
+.dashboard-table .table th:nth-child(5),
+.table-wrapper:has(.dashboard-table) .table th:nth-child(5) {
     width: 10%;
 }
 
 /* Prenotati */
-.table th:nth-child(6) {
+.dashboard-table .table th:nth-child(6),
+.table-wrapper:has(.dashboard-table) .table th:nth-child(6) {
     width: 11%;
 }
 
 /* Elenco */
-.table th:nth-child(7) {
+.dashboard-table .table th:nth-child(7),
+.table-wrapper:has(.dashboard-table) .table th:nth-child(7) {
     width: 11%;
 }
 
 /* Prenota */
-.table th:nth-child(8) {
+.dashboard-table .table th:nth-child(8),
+.table-wrapper:has(.dashboard-table) .table th:nth-child(8) {
     width: 11%;
 }
 
 /* Azioni */
 
+/* RESPONSIVE DESIGN - CONSOLIDATED */
 @media (max-width: 768px) {
+
+    /* Action selects */
+    .action-select,
     .action-select-dashboard {
         font-size: 0.85em;
         padding: 6px 10px;
@@ -2599,42 +2500,87 @@ body {
         background-position: right 6px center;
     }
 
-    .table th:nth-child(1) {
+    /* Quick validation button */
+    .btn-validate-quick {
+        width: 28px;
+        height: 28px;
+        font-size: 0.9em;
+    }
+
+    /* Transactions table responsive widths */
+    .transactions-table .table th:nth-child(1) {
+        width: 6%;
+    }
+
+    /* Id */
+    .transactions-table .table th:nth-child(2) {
+        width: 22%;
+    }
+
+    /* Nome */
+    .transactions-table .table th:nth-child(3) {
+        width: 25%;
+    }
+
+    /* Email */
+    .transactions-table .table th:nth-child(4) {
+        width: 12%;
+    }
+
+    /* Posti */
+    .transactions-table .table th:nth-child(5) {
+        width: 14%;
+    }
+
+    /* Stato */
+    .transactions-table .table th:nth-child(6) {
+        width: 8%;
+    }
+
+    /* Valida */
+    .transactions-table .table th:nth-child(7) {
+        width: 13%;
+    }
+
+    /* Azioni */
+
+    /* Dashboard table responsive widths */
+    .dashboard-table .table th:nth-child(1) {
         width: 20%;
     }
 
     /* Evento */
-    .table th:nth-child(2) {
+    .dashboard-table .table th:nth-child(2) {
         width: 10%;
     }
 
     /* Data */
-    .table th:nth-child(3) {
+    .dashboard-table .table th:nth-child(3) {
         width: 8%;
     }
 
     /* Stato */
-    .table th:nth-child(4) {
+    .dashboard-table .table th:nth-child(4) {
         width: 8%;
     }
 
     /* Venduti */
-    .table th:nth-child(5) {
+    .dashboard-table .table th:nth-child(5) {
         width: 8%;
     }
 
     /* Prenotati */
-    .table th:nth-child(6) {
+    .dashboard-table .table th:nth-child(6) {
         width: 15%;
     }
 
     /* Elenco */
-    .table th:nth-child(7) {
+    .dashboard-table .table th:nth-child(7) {
         width: 15%;
     }
 
     /* Prenota */
-    .table th:nth-child(8) {
+    .dashboard-table .table th:nth-child(8) {
         width: 16%;
     }
 
@@ -2642,11 +2588,29 @@ body {
 }
 
 @media (max-width: 480px) {
+
+    /* Action selects */
+    .action-select,
     .action-select-dashboard {
         font-size: 0.8em;
         padding: 5px 8px;
         padding-right: 22px;
         background-size: 8px;
         background-position: right 5px center;
+    }
+
+    /* Quick validation button */
+    .btn-validate-quick {
+        width: 24px;
+        height: 24px;
+        font-size: 0.8em;
+    }
+
+    /* Email column truncation on mobile */
+    .table td:nth-child(3) {
+        max-width: 80px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 }
