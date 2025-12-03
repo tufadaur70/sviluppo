@@ -19,9 +19,8 @@
                 <th>Email/Note</th>
                 <th>Posti</th>
                 <th>Stato</th>
-                <th>PDF</th>
-                <th>Convalida</th>
-                <th>Elimina</th>
+                <th>Valida</th>
+                <th>Azioni</th>
             </tr>
         </thead>
         <tbody>
@@ -39,49 +38,115 @@
                     {% elif t.status == 3 %}
                     <span class="badge badge-validated">Prenotato</span>
                     {% elif t.status == 4 %}
-		    <span class="badge badge-paid">Validato</span>	
-		    {% else %}
+                    <span class="badge badge-ticket-validated">Validato</span>
+                    {% else %}
                     <span class="badge badge-unknown">Sconosciuto</span>
                     {% endif %}
                 </td>
                 <td>
-                    {% if t.status in [2,3,4] %}
-                    <a href="{{ url_for('generate_ticket_pdf_route', booking_id=t.id) }}" class="btn btn-info btn-sm"
-                        title="Scarica PDF biglietto">
-                        📄 PDF
-                    </a>
-                    {% else %}
-                    <span class="text-muted">-</span>
-                    {% endif %}
-                </td>
-                <td>
                     {% if t.status in [2,3] %}
-                    <form method="post" action="{{ url_for('validate_ticket', booking_id=t.id) }}" class="d-inline">
-                        <button type="submit" class="btn btn-success btn-sm" title="Valida titolo">
-                            Valida
+                    <form method="post" action="{{ url_for('validate_ticket', booking_id=t.id) }}"
+                        class="d-inline validate-form">
+                        <button type="submit" class="btn-validate-quick" title="Valida biglietto"
+                            onclick="return confirm('Validare questo biglietto?')">
+                            ✅
                         </button>
                     </form>
+                    {% elif t.status == 4 %}
+                    <span class="validate-done" title="Già validato"></span>
                     {% else %}
-                    <span class="text-muted">-</span>
+                    <span class="text-muted" title="Non validabile"></span>
                     {% endif %}
                 </td>
                 <td>
-                    <form method="post" action="{{ url_for('delete_transaction', booking_id=t.id) }}" class="d-inline">
-                        <button type="submit" class="btn btn-danger btn-sm"
-                            onclick="return confirm('Sei sicuro di voler eliminare questa transazione? I posti verranno liberati.')"
-                            title="Elimina transazione">
-                            🗑️ Elimina
-                        </button>
-                    </form>
+                    <div class="transaction-actions-dropdown">
+                        <select class="action-select" data-booking-id="{{ t.id }}" data-status="{{ t.status }}">
+                            <option value=""></option>
+                            <option value="edit">Modifica</option>
+                            {% if t.status in [2,3,4] %}
+                            <option value="pdf">PDF Biglietto</option>
+                            <option value="email">Reinvia Email</option>
+                            {% endif %}\
+                            {% if t.status in [2,3] %}
+                            <option value="validate">Valida</option>
+                            {% endif %}
+                            <option value="delete">Elimina</option>
+                        </select>
+                    </div>
                 </td>
             </tr>
             {% else %}
             <tr>
-                <td colspan="9" style="text-align:center; color:#888;">Nessuna transazione trovata per questo evento.
+                <td colspan="7" style="text-align:center; color:#888;">Nessuna transazione trovata per questo evento.
                 </td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
 </div>
+
+<!-- Form nascosti per le azioni -->
+<form id="validate-form" method="post" style="display:none;">
+    <input type="hidden" name="booking_id" id="validate-booking-id">
+</form>
+
+<form id="delete-form" method="post" style="display:none;">
+    <input type="hidden" name="booking_id" id="delete-booking-id">
+</form>
+
+<form id="resend-form" method="post" style="display:none;">
+    <input type="hidden" name="booking_id" id="resend-booking-id">
+</form>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Gestione delle azioni dal menu a tendina
+        document.querySelectorAll('.action-select').forEach(function (select) {
+            select.addEventListener('change', function () {
+                const action = this.value;
+                const bookingId = this.dataset.bookingId;
+                const status = this.dataset.status;
+
+                if (!action) return;
+
+                // Reset select
+                this.selectedIndex = 0;
+
+                switch (action) {
+                    case 'edit':
+                        window.location.href = `/edit_transaction/${bookingId}`;
+                        break;
+
+                    case 'pdf':
+                        window.location.href = `/generate_ticket_pdf/${bookingId}`;
+                        break;
+
+                    case 'email':
+                        if (confirm('Reinviare l\'email di conferma?')) {
+                            const form = document.getElementById('resend-form');
+                            form.action = `/resend_email/${bookingId}`;
+                            form.submit();
+                        }
+                        break;
+
+                    case 'validate':
+                        if (confirm('Validare questo biglietto?')) {
+                            const form = document.getElementById('validate-form');
+                            form.action = `/validate_ticket/${bookingId}`;
+                            form.submit();
+                        }
+                        break;
+
+                    case 'delete':
+                        if (confirm('Sei sicuro di voler eliminare questa transazione? I posti verranno liberati.')) {
+                            const form = document.getElementById('delete-form');
+                            form.action = `/delete_transaction/${bookingId}`;
+                            form.submit();
+                        }
+                        break;
+                }
+            });
+        });
+    });
+</script>
 {% endblock %}

@@ -16,10 +16,9 @@
         <th>Stato</th>
         <th>Venduti</th>
         <th>Prenotati</th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
+        <th>Elenco</th>
+        <th>Prenota</th>
+        <th>Azioni</th>
       </tr>
     </thead>
     <tbody>
@@ -37,35 +36,80 @@
         <td>{{ e.sold }}</td>
         <td>{{ e.validated }}</td>
         <td>
-          <a href="{{ url_for('event_transactions', event_id=e.id) }}" class="btn btn-info btn-sm">📊Elenco</a>
-        </td>
-        <td class="dashboard-actions">
-          <a href="{{ url_for('edit_event', event_id=e.id) }}" class="btn btn-primary btn-sm">✏️ Modifica</a>
+          <a href="{{ url_for('event_transactions', event_id=e.id) }}" class="btn btn-info btn-sm">📊 Elenco</a>
         </td>
         <td>
-          {% if e.visible == 1 %}
-          <form action="{{ url_for('hide_event_route', event_id=e.id) }}" method="post" style="display:inline;"
-            onsubmit="return confirm('Sei sicuro di voler nascondere questo evento dalla vista pubblica?');">
-            <button type="submit" class="btn btn-warning btn-sm">🙈 Nascondi</button>
-          </form>
-          {% else %}
-          <form action="{{ url_for('show_event_route', event_id=e.id) }}" method="post" style="display:inline;"
-            onsubmit="return confirm('Sei sicuro di voler rendere visibile questo evento?');">
-            <button type="submit" class="btn btn-success btn-sm">👁️ Mostra</button>
-          </form>
-          {% endif %}
+          <a href="{{ url_for('admin_book_seats', event_id=e.id) }}" class="btn btn-warning btn-sm">💰 Prenota</a>
         </td>
         <td>
-          <a href="{{ url_for('admin_book_seats', event_id=e.id) }}" class="btn btn-warning btn-sm"
-            style="display:block;">💰Prenota</a>
+          <div class="dashboard-actions-dropdown">
+            <select class="action-select-dashboard" data-event-id="{{ e.id }}" data-visible="{{ e.visible }}">
+              <option value="">-- Azioni --</option>
+              <option value="edit">✏️ Modifica</option>
+              {% if e.visible == 1 %}
+              <option value="hide">🙈 Nascondi</option>
+              {% else %}
+              <option value="show">👁️ Mostra</option>
+              {% endif %}
+            </select>
+          </div>
         </td>
       </tr>
       {% else %}
       <tr>
-        <td colspan="9" style="text-align:center; color:#888;">Nessun evento presente.</td>
+        <td colspan="8" style="text-align:center; color:#888;">Nessun evento presente.</td>
       </tr>
       {% endfor %}
     </tbody>
   </table>
 </div>
+
+<!-- Form nascosti per le azioni -->
+<form id="hide-form" method="post" style="display:none;">
+  <input type="hidden" name="event_id" id="hide-event-id">
+</form>
+
+<form id="show-form" method="post" style="display:none;">
+  <input type="hidden" name="event_id" id="show-event-id">
+</form>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // Gestione delle azioni dal menu a tendina dashboard
+    document.querySelectorAll('.action-select-dashboard').forEach(function (select) {
+      select.addEventListener('change', function () {
+        const action = this.value;
+        const eventId = this.dataset.eventId;
+        const isVisible = this.dataset.visible === '1';
+
+        if (!action) return;
+
+        // Reset select
+        this.selectedIndex = 0;
+
+        switch (action) {
+          case 'edit':
+            window.location.href = `/event/${eventId}/edit`;
+            break;
+
+          case 'hide':
+            if (confirm('Sei sicuro di voler nascondere questo evento dalla vista pubblica?')) {
+              const form = document.getElementById('hide-form');
+              form.action = `/event/${eventId}/hide`;
+              form.submit();
+            }
+            break;
+
+          case 'show':
+            if (confirm('Sei sicuro di voler rendere visibile questo evento?')) {
+              const form = document.getElementById('show-form');
+              form.action = `/event/${eventId}/show`;
+              form.submit();
+            }
+            break;
+        }
+      });
+    });
+  });
+</script>
 {% endblock %}

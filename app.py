@@ -437,6 +437,28 @@ def event_transactions(event_id):
         transactions=transactions
     )
 
+@app.route('/resend_email/<int:booking_id>', methods=['POST'])
+@login_required
+def resend_email(booking_id):
+    """Reinvia email di conferma con PDF"""
+    booking = get_booking_by_id(booking_id)
+    if not booking:
+        flash('Prenotazione non trovata.', 'error')
+        return redirect(request.referrer or url_for('dashboard'))
+    
+    if booking['status'] not in [2, 3, 4]:
+        flash('Solo le prenotazioni pagate/prenotate/validate possono ricevere email di conferma.', 'warning')
+        return redirect(request.referrer or url_for('dashboard'))
+    
+    try:
+        send_booking_confirmation_with_pdf(booking_id)
+        flash(f'Email di conferma reinviata con successo a {booking["email"]}.', 'success')
+    except Exception as e:
+        logger.error(f'Errore invio email per booking {booking_id}: {e}')
+        flash('Errore durante l\'invio dell\'email.', 'error')
+    
+    return redirect(request.referrer or url_for('dashboard'))
+
 @app.route('/validate_ticket/<int:booking_id>', methods=['POST'])
 @login_required
 def validate_ticket(booking_id):
@@ -452,6 +474,41 @@ def validate_ticket(booking_id):
     
     update_booking_status(booking_id , 4)
     return redirect(request.referrer or url_for('dashboard'))
+
+@app.route('/edit_transaction/<int:booking_id>', methods=['GET', 'POST'])
+@login_required
+def edit_transaction(booking_id):
+    """Modifica transazione esistente"""
+    booking = get_booking_by_id(booking_id)
+    if not booking:
+        flash('Prenotazione non trovata.', 'error')
+        return redirect(url_for('dashboard'))
+    
+    event = get_event_by_id(booking['event_id'])
+    if not event:
+        flash('Evento non trovato.', 'error')
+        return redirect(url_for('dashboard'))
+    
+    if request.method == 'POST':
+        new_name = request.form.get('name', '').strip()
+        new_email = request.form.get('email', '').strip()
+        new_status = request.form.get('status', type=int)
+        
+        # Validazione
+        if not new_name:
+            flash('Il nome è obbligatorio.', 'error')
+            return render_template('edit_transaction.html', booking=booking, event=event)
+        
+        if new_status not in [1, 2, 3, 4]:
+            flash('Stato non valido.', 'error')
+            return render_template('edit_transaction.html', booking=booking, event=event)
+        
+        # Aggiorna la prenotazione
+        update_booking_details(booking_id, new_name, new_email, new_status)
+        flash(f'Prenotazione {booking_id} aggiornata con successo.', 'success')
+        return redirect(url_for('event_transactions', event_id=booking['event_id']))
+    
+    return render_template('edit_transaction.html', booking=booking, event=event)
 
 @app.route('/delete_transaction/<int:booking_id>', methods=['POST'])
 @login_required

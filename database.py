@@ -130,6 +130,16 @@ def update_booking_status(booking_id, status):
     conn.commit()
     conn.close()
 
+def update_booking_details(booking_id, name, email, status):
+    """Aggiorna dettagli completi prenotazione"""
+    conn = get_db()
+    conn.execute(
+        'UPDATE bookings SET name=?, email=?, status=? WHERE id=?', 
+        (name, email, status, booking_id)
+    )
+    conn.commit()
+    conn.close()
+
 def get_event_transactions(event_id):
     """Ottiene tutte le transazioni per un evento specifico"""
     conn = get_db()

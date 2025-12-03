@@ -1,0 +1,170 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <h2 class="text-center mb-4">Modifica Transazione #{{ booking.id }}</h2>
+
+            <!-- Info evento -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">📅 Informazioni Evento</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <strong>Titolo:</strong> {{ event.title }}
+                        </div>
+                        <div class="col-md-3">
+                            <strong>Data:</strong> {{ event.date }}
+                        </div>
+                        <div class="col-md-3">
+                            <strong>Ora:</strong> {{ event.time }}
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-md-6">
+                            <strong>Posti prenotati:</strong> <span class="badge badge-info">{{ booking.seats }}</span>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Data creazione:</strong> {{ booking.created_at }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form modifica -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">✏️ Modifica Dati Prenotazione</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="name" class="form-label">Nome Cliente *</label>
+                                <input type="text" class="form-control" id="name" name="name" value="{{ booking.name }}"
+                                    required maxlength="100" placeholder="Nome completo del cliente">
+                                <div class="form-text">Nome che apparirà sul biglietto</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="email" class="form-label">Email Cliente</label>
+                                <input type="text" class="form-control" id="email" name="email"
+                                    value="{{ booking.email }}" maxlength="200" placeholder="email@esempio.com">
+                                <div class="form-text">Email per invio biglietti e comunicazioni</div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-12">
+                                <label for="status" class="form-label">Stato Prenotazione *</label>
+                                <select class="form-select" id="status" name="status" required>
+                                    <option value="1" {% if booking.status==1 %}selected{% endif %}>
+                                        🟡 In attesa (Pending) - Prenotazione non ancora pagata
+                                    </option>
+                                    <option value="2" {% if booking.status==2 %}selected{% endif %}>
+                                        🟢 Pagato (Paid) - Pagamento online completato
+                                    </option>
+                                    <option value="3" {% if booking.status==3 %}selected{% endif %}>
+                                        🔵 Prenotato (Booked) - Pagamento in contanti alla cassa
+                                    </option>
+                                    <option value="4" {% if booking.status==4 %}selected{% endif %}>
+                                        ✅ Validato (Validated) - Biglietto verificato all'ingresso
+                                    </option>
+                                </select>
+                                <div class="form-text">
+                                    Seleziona lo stato appropriato in base al tipo di transazione
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Stato attuale -->
+                        <div class="alert alert-info mb-4">
+                            <strong>Stato attuale:</strong>
+                            {% if booking.status == 1 %}
+                            <span class="badge badge-pending">🟡 In attesa</span> - Prenotazione in sospeso
+                            {% elif booking.status == 2 %}
+                            <span class="badge badge-paid">🟢 Pagato</span> - Pagamento completato online
+                            {% elif booking.status == 3 %}
+                            <span class="badge badge-validated">🔵 Prenotato</span> - Pagamento in contanti
+                            {% elif booking.status == 4 %}
+                            <span class="badge badge-paid">✅ Validato</span> - Biglietto verificato
+                            {% else %}
+                            <span class="badge badge-unknown">❓ Sconosciuto</span>
+                            {% endif %}
+                        </div>
+
+                        <!-- Pulsanti azione -->
+                        <div class="d-flex justify-content-between">
+                            <a href="{{ url_for('event_transactions', event_id=event.id) }}" class="btn btn-secondary">
+                                ← Annulla
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                💾 Salva Modifiche
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Note informative -->
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h6 class="mb-0">ℹ️ Note sui Stati</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <ul class="list-unstyled mb-0">
+                                <li><strong>🟡 In attesa:</strong> Prenotazione creata ma non pagata</li>
+                                <li><strong>🟢 Pagato:</strong> Pagamento online completato via Stripe</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <ul class="list-unstyled mb-0">
+                                <li><strong>🔵 Prenotato:</strong> Prenotazione admin con pagamento in contanti</li>
+                                <li><strong>✅ Validato:</strong> Biglietto verificato all'ingresso dell'evento</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Form validation
+        const form = document.querySelector('form');
+        const nameInput = document.getElementById('name');
+        const emailInput = document.getElementById('email');
+
+        form.addEventListener('submit', function (e) {
+            let isValid = true;
+
+            // Validate name
+            if (nameInput.value.trim().length < 2) {
+                alert('Il nome deve contenere almeno 2 caratteri');
+                nameInput.focus();
+                isValid = false;
+            }
+
+            if (!isValid) {
+                e.preventDefault();
+            }
+        });
+
+        // Auto-trim inputs
+        [nameInput, emailInput].forEach(input => {
+            input.addEventListener('blur', function () {
+                this.value = this.value.trim();
+            });
+        });
+    });
+</script>
+
+{% endblock %}
