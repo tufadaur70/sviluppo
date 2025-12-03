@@ -11,7 +11,7 @@ load_dotenv(env_path)
 # Percorsi
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 CONFIG_PATH = os.path.join(BASE_DIR, 'config.json')
-DB_PATH = os.path.join(BASE_DIR, 'data', 'cinema.db')
+DB_PATH = os.path.join(BASE_DIR,  'cinema.db')
 IMG_PATH = os.path.join(BASE_DIR, 'static', 'img')
 UPLOAD_FOLDER = os.path.join(BASE_DIR, 'static', 'posters')
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
