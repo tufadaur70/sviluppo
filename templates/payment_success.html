@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block content %}
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<div class="ticket-success-card">
+    <div class="ticket-header">
+        <img src="/static/img/logo.png" alt="Logo Teatro San Raffaele">
+        <div class="ticket-title">Teatro San Raffaele</div>
+
+        <h2>{{ event.title }}</h2>
+        <h3>{{ event.date }} alle {{ event.time }}</h3>
+    </div>
+    <div class="ticket-poster">
+        {% if event.poster_url %}
+        <img src="{{ event.poster_url }}" alt="Locandina evento" class="event-poster">
+        {% else %}
+        <div class="event-poster-placeholder">Nessuna locandina</div>
+        {% endif %}
+    </div>
+    <div class="ticket-details">
+        <div><b>Ticket N: {{ booking.id }}</b></div></br>
+        <div>Email: {{ booking.email }}</div>
+        <div>Nominativo: {{ booking.name }}</div></br>
+        <div>
+            <h3>Posti:{{ booking.seats }}</h3>
+        </div>
+    </div>
+
+    <div class="ticket-footer">
+        Riceverai una email con il tuo biglietto<br>
+        Grazie per l'acquisto!
+    </div>
+</div>
+
+
+{% endblock %}

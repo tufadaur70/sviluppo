@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Header con icona -->
+    <div class="text-center mb-5">
+        <div style="font-size: 3em; margin-bottom: 16px;">✏️</div>
+        <h1 class="display-4 mb-2">Modifica Evento</h1>
+        <p class="text-muted">Aggiorna i dettagli del spettacolo "{{ event.title }}"</p>
+    </div>
+
+    <!-- Card form -->
+    <div class="event-form-card">
+        <form method="post" enctype="multipart/form-data" autocomplete="off" class="event-form">
+
+            <!-- Titolo Evento -->
+            <div class="form-group">
+                <label for="title" class="form-label">
+                    <span class="label-icon">🎪</span>
+                    Titolo Evento
+                </label>
+                <input id="title" name="title" class="form-control" value="{{ event.title }}"
+                    placeholder="Es. La Cenerentola, Romeo e Giulietta..." required>
+            </div>
+
+            <!-- Data e Ora in riga -->
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="date" class="form-label">
+                        <span class="label-icon">📅</span>
+                        Data Spettacolo
+                    </label>
+                    <input id="date" name="date" type="date" class="form-control"
+                        value="{% if event.date %}{{ event.date | replace('/', '-') }}{% endif %}"
+                        min="{{ (now().strftime('%Y-%m-%d')) }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="time" class="form-label">
+                        <span class="label-icon">⏰</span>
+                        Orario
+                    </label>
+                    <input id="time" name="time" type="time" class="form-control" value="{{ event.time }}" required>
+                </div>
+            </div>
+
+            <!-- Prezzo -->
+            <div class="form-group">
+                <label for="price" class="form-label">
+                    <span class="label-icon">💰</span>
+                    Prezzo Biglietto
+                </label>
+                <div class="input-with-addon">
+                    <span class="input-addon">€</span>
+                    <input id="price" name="price" type="number" step="0.01" class="form-control"
+                        value="{{ event.price }}" min="0" max="999.99" required>
+                </div>
+            </div>
+
+            <!-- Upload Locandina con preview -->
+            <div class="form-group">
+                <label for="poster" class="form-label">
+                    <span class="label-icon">🖼️</span>
+                    Locandina Evento
+                </label>
+
+                {% if event.poster_url %}
+                <div class="current-poster-preview">
+                    <p class="text-muted mb-2">Locandina attuale:</p>
+                    <img src="{{ event.poster_url }}" alt="Locandina evento" class="poster-preview-img">
+                </div>
+                {% endif %}
+
+                <div class="file-upload-area">
+                    <input id="poster" name="poster" type="file" accept="image/*" class="file-input">
+                    <div class="file-upload-text">
+                        <div class="upload-icon">📤</div>
+                        <p>{% if event.poster_url %}Carica nuova locandina{% else %}Trascina qui la locandina{% endif %}
+                            o clicca per selezionare</p>
+                        <small class="text-muted">JPG, PNG, GIF - Max 5MB</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stato visibilità -->
+            <div class="form-group">
+                <label class="form-label">
+                    <span class="label-icon">👁️</span>
+                    Stato Evento
+                </label>
+                <div class="visibility-status">
+                    {% if event.visible == 1 %}
+                    <span class="badge badge-visible">✅ Visibile al pubblico</span>
+                    {% else %}
+                    <span class="badge badge-hidden">❌ Nascosto dal pubblico</span>
+                    {% endif %}
+                    <small class="text-muted d-block mt-2">
+                        Per cambiare la visibilità, usa i pulsanti nella dashboard
+                    </small>
+                </div>
+            </div>
+
+            <!-- Pulsanti azione -->
+            <div class="form-actions">
+                <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">
+                    <span>❌</span> Annulla
+                </a>
+                <a href="{{ url_for('event_transactions', event_id=event.id) }}" class="btn btn-info">
+                    <span>📊</span> Transazioni
+                </a>
+                <button type="submit" class="btn btn-primary btn-lg">
+                    <span>💾</span> Salva Modifiche
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

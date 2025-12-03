@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<h2 class="text-center mb-3">Transazioni per l'evento: {{ event_title }}</h2>
+<div class="text-center mb-4">
+    <a href="{{ url_for('generate_event_summary_pdf_route', event_id=event_id) }}" class="btn btn-warning me-2">
+        📊 Riepilogo PDF
+    </a>
+    <a href="{{ url_for('dashboard') }}" class="btn btn-dark">&larr; Torna alla dashboard</a>
+</div>
+
+<div class="table-wrapper">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nome</th>
+                <th>Email/Note</th>
+                <th>Posti</th>
+                <th>Stato</th>
+                <th>PDF</th>
+                <th>Convalida</th>
+                <th>Elimina</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for t in transactions |sort(attribute='id') %}
+            <tr>
+                <td>{{ t.id }}</td>
+                <td>{{ t.name }}</td>
+                <td>{{ t.email }}</td>
+                <td>{{ t.seats }}</td>
+                <td>
+                    {% if t.status == 1 %}
+                    <span class="badge badge-pending">In attesa</span>
+                    {% elif t.status == 2 %}
+                    <span class="badge badge-paid">Pagato</span>
+                    {% elif t.status == 3 %}
+                    <span class="badge badge-validated">Prenotato</span>
+                    {% elif t.status == 4 %}
+		    <span class="badge badge-paid">Validato</span>	
+		    {% else %}
+                    <span class="badge badge-unknown">Sconosciuto</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if t.status in [2,3,4] %}
+                    <a href="{{ url_for('generate_ticket_pdf_route', booking_id=t.id) }}" class="btn btn-info btn-sm"
+                        title="Scarica PDF biglietto">
+                        📄 PDF
+                    </a>
+                    {% else %}
+                    <span class="text-muted">-</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if t.status in [2,3] %}
+                    <form method="post" action="{{ url_for('validate_ticket', booking_id=t.id) }}" class="d-inline">
+                        <button type="submit" class="btn btn-success btn-sm" title="Valida titolo">
+                            Valida
+                        </button>
+                    </form>
+                    {% else %}
+                    <span class="text-muted">-</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <form method="post" action="{{ url_for('delete_transaction', booking_id=t.id) }}" class="d-inline">
+                        <button type="submit" class="btn btn-danger btn-sm"
+                            onclick="return confirm('Sei sicuro di voler eliminare questa transazione? I posti verranno liberati.')"
+                            title="Elimina transazione">
+                            🗑️ Elimina
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="9" style="text-align:center; color:#888;">Nessuna transazione trovata per questo evento.
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

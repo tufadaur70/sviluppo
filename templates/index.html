@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<div class="text-center mb-5">
+  <div style="font-size: 3.5em; margin-bottom: 16px;">🎭</div>
+  <h1
+    style="background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-size: 2.5em; font-weight: 700; margin-bottom: 16px;">
+    Eventi in Programma</h1>
+  <p style="color: var(--text-secondary); font-size: 1.1em;">Scegli i Posti e Acquista i Biglietti </p>
+</div>
+<div class="event-cards">
+  {% for event in events |sort(attribute='id', reverse=false) %}
+  <div class="event-card">
+    {% if event.poster_url %}
+    <div class="event-card-img-container">
+      <img src="{{ event.poster_url }}" alt="Locandina {{ event.title }}" class="event-card-img">
+    </div>
+    {% else %}
+    <div class="event-card-img event-card-img-placeholder">Nessuna locandina</div>
+    {% endif %}
+    <div class="event-card-body">
+      <h2 class="event-card-title">{{ event.title }}</h2>
+      <div class="event-card-date">{{ event.date }}</div>
+      <div class="event-card-time">{{ event.time }}</div>
+      <div class="event-card-price">Posto Unico: {{ event.price }} €</div>
+      <a href="{{ url_for('select_seats', event_id=event.id) }}" class="btn btn-primary">🎫 Scegli i Posti</a>
+    </div>
+  </div>
+  {% else %}
+  <div style="text-align:center; width:100%; padding: 3rem; color: var(--text-secondary);">
+    <div style="font-size: 3em; margin-bottom: 1rem;">🎭</div>
+    <h3 style="color: var(--text-primary); margin-bottom: 0.5rem;">Nessun evento disponibile</h3>
+    <p>Torna presto per scoprire i nostri prossimi spettacoli!</p>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

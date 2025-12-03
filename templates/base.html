@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Teatro San Raffaele Booking</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script src="{{ url_for('static', filename='form-enhancement.js') }}" defer></script>
+</head>
+
+<body>
+  <div class="navbar">
+    <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo" class="navbar-logo">
+    <div class="navbar-title">Teatro San Raffaele Booking</div>
+    <div class="navbar-links">
+      <a href="{{ url_for('index') }}">Home Page</a>
+      <a href="{{ url_for('dashboard') }}">Admin</a>
+      <!-- altri link -->
+    </div>
+  </div>
+  <div class="main-content">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    {% for category, message in messages %}
+    <div class="flash-message flash-{{ category }}">
+      <strong>
+        {% if category == 'error' %}⚠️
+        {% elif category == 'success' %}✅
+        {% elif category == 'warning' %}⚡
+        {% elif category == 'info' %}ℹ️
+        {% endif %}
+      </strong>
+      {{ message }}
+    </div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+  </div>
+
+  <div class="footer">
+    <div class="footer-content">
+      &copy; {{ now().year }} Teatro San Raffaele &nbsp;|&nbsp; Powered by <span style="color:#ffffff;">
+        Tfnmusic.it</span>
+      <br>
+      <span class="footer-links">
+        <a href="mailto:ilcilindroteatro@yahoo.it">Contatti</a> &nbsp;|&nbsp;
+        <a href="https://teatrosanraffaele.it" target="_blank">Teatro San Raffaele</a>
+      </span>
+    </div>
+  </div>
+</body>
+
+</html>

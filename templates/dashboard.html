@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<div class="d-flex justify-between align-center mb-4">
+  <h2 class="mb-0">Dashboard Eventi</h2>
+  <a href="{{ url_for('add_event') }}" class="btn btn-success">+ Nuovo evento</a>
+</div>
+
+<div class="table-wrapper">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Evento</th>
+        <th>Data</th>
+        <th>Stato</th>
+        <th>Venduti</th>
+        <th>Prenotati</th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for e in events |sort(attribute='id') %}
+      <tr>
+        <td>{{ e.title }}</td>
+        <td>{{ e.date }}</td>
+        <td>
+          {% if e.visible == 1 %}
+          <span class="badge badge-visible">Visibile</span>
+          {% else %}
+          <span class="badge badge-hidden">Nascosto</span>
+          {% endif %}
+        </td>
+        <td>{{ e.sold }}</td>
+        <td>{{ e.validated }}</td>
+        <td>
+          <a href="{{ url_for('event_transactions', event_id=e.id) }}" class="btn btn-info btn-sm">📊Elenco</a>
+        </td>
+        <td class="dashboard-actions">
+          <a href="{{ url_for('edit_event', event_id=e.id) }}" class="btn btn-primary btn-sm">✏️ Modifica</a>
+        </td>
+        <td>
+          {% if e.visible == 1 %}
+          <form action="{{ url_for('hide_event_route', event_id=e.id) }}" method="post" style="display:inline;"
+            onsubmit="return confirm('Sei sicuro di voler nascondere questo evento dalla vista pubblica?');">
+            <button type="submit" class="btn btn-warning btn-sm">🙈 Nascondi</button>
+          </form>
+          {% else %}
+          <form action="{{ url_for('show_event_route', event_id=e.id) }}" method="post" style="display:inline;"
+            onsubmit="return confirm('Sei sicuro di voler rendere visibile questo evento?');">
+            <button type="submit" class="btn btn-success btn-sm">👁️ Mostra</button>
+          </form>
+          {% endif %}
+        </td>
+        <td>
+          <a href="{{ url_for('admin_book_seats', event_id=e.id) }}" class="btn btn-warning btn-sm"
+            style="display:block;">💰Prenota</a>
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="9" style="text-align:center; color:#888;">Nessun evento presente.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
