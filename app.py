@@ -433,6 +433,7 @@ def event_transactions(event_id):
     return render_template(
         'event_transactions.html',
         event_id=event_id,
+        event=event,
         event_title=event['title'] if event else 'Evento sconosciuto',
         transactions=transactions
     )

@@ -18,6 +18,7 @@
                 <th>Nome</th>
                 <th>Email/Note</th>
                 <th>Posti</th>
+                <th>N° Posti</th>
                 <th>Stato</th>
                 <th>Rendi Pagato</th>
                 <th>Azioni</th>
@@ -30,6 +31,7 @@
                 <td>{{ t.name }}</td>
                 <td>{{ t.email }}</td>
                 <td>{{ t.seats }}</td>
+                <td>{{ (t.seats.split(',')|length) if t.seats else 0 }}</td>
                 <td>
                     {% if t.status == 1 %}
                     <span class="badge badge-pending">In attesa</span>
