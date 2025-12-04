@@ -1280,9 +1280,12 @@ body {
 
 .booking-col {
     background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 2px 12px #0001;
-    padding: 24px 18px;
+    border-radius: 8px;
+    /* Ridotto da 12px */
+    box-shadow: 0 1px 8px #0001;
+    /* Ridotto shadow */
+    padding: 12px 9px;
+    /* Ridotto da 24px 18px */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -1291,7 +1294,8 @@ body {
 
 .booking-main {
     width: 100%;
-    max-width: 1000px;
+    max-width: 800px;
+    /* Ridotto da 1000px */
     flex: 1 1 0;
     align-items: center;
     justify-content: flex-start;
@@ -1299,53 +1303,71 @@ body {
 
 .booking-side {
     width: 100%;
-    max-width: 250px;
-    flex: 0 0 250px;
+    max-width: 200px;
+    /* Ridotto da 250px */
+    flex: 0 0 200px;
+    /* Ridotto da 250px */
     align-items: center;
     justify-content: flex-start;
 }
 
 .event-poster {
     width: 100%;
-    max-width: 200px;
-    border-radius: 8px;
-    margin: 10px auto 18px auto;
-    box-shadow: 0 2px 8px #0002;
+    max-width: 120px;
+    /* Ridotto da 200px */
+    border-radius: 6px;
+    /* Ridotto da 8px */
+    margin: 5px auto 9px auto;
+    /* Ridotto da 10px auto 18px auto */
+    box-shadow: 0 1px 4px #0002;
+    /* Ridotto shadow */
     display: block;
 }
 
 .event-poster-placeholder {
     width: 100%;
-    max-width: 200px;
-    height: 280px;
+    max-width: 120px;
+    /* Ridotto da 200px */
+    height: 168px;
+    /* Ridotto da 280px per mantenere proporzioni */
     background: #eee;
     color: #aaa;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 8px;
-    margin: 10px auto 18px auto;
+    border-radius: 6px;
+    /* Ridotto da 8px */
+    margin: 5px auto 9px auto;
+    /* Ridotto da 10px auto 18px auto */
     font-style: italic;
+    font-size: 0.8em;
+    /* Aggiunto per testo più piccolo */
 }
 
 .seatmap-wrapper {
     width: 100%;
-    margin-top: 24px;
+    margin-top: 16.8px;
     display: flex;
     justify-content: center;
     overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    /* Smooth scroll su iOS */
+    scrollbar-width: thin;
+    /* Firefox */
 }
 
 .seatmap {
     width: max-content;
-    min-width: 200px;
-    /* Ridotto da 400px */
+    min-width: 280px;
+    /* 70% di 400px originali */
     background: #f8f8f8;
-    padding: 16px 9px;
-    /* Ridotto da 32px 18px */
-    border-radius: 12px;
-    margin-bottom: 20px;
-    box-shadow: 0 1px 6px #0001;
+    padding: 22.4px 12.6px;
+    /* 70% di 32px 18px originali */
+    border-radius: 8px;
+    margin-bottom: 14px;
+    /* 70% di 20px originali */
+    box-shadow: 0 1px 4px #0001;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -1353,7 +1375,8 @@ body {
 }
 
 .seat-row {
-    margin-bottom: 7px;
+    margin-bottom: 5px;
+    /* 70% di 7px originali */
     display: flex;
     flex-wrap: nowrap;
     justify-content: center;
@@ -1367,28 +1390,27 @@ body {
 
 .seat {
     display: inline-block;
-    width: 12.5px;
-    /* Ridotto del 50% da 25px */
-    height: 12.5px;
-    /* Ridotto del 50% da 25px */
-    margin: 1px 1px;
-    /* Ridotto del 50% da 2px 2px */
-    line-height: 12.5px;
-    /* Ridotto del 50% da 25px */
+    width: 17.5px;
+    /* 70% di 25px originali */
+    height: 17.5px;
+    /* 70% di 25px originali */
+    margin: 1.4px 1.4px;
+    /* 70% di 2px originali */
+    line-height: 17.5px;
+    /* 70% di 25px originali */
     text-align: center;
-    border-radius: 4px;
-    /* Ridotto del 50% da 7px */
+    border-radius: 5px;
+    /* 70% di 7px originali */
     border: 1px solid #bbb;
-    /* Ridotto del 50% da 1.5px */
     font-weight: 500;
     background: #e0ffe0;
     color: #222;
     transition: box-shadow 0.2s, background 0.2s, color 0.2s, border 0.2s;
     cursor: pointer;
     position: relative;
-    box-shadow: 0 1px 2px #0001;
-    font-size: 6px;
-    /* Aggiunto per testo leggibile */
+    box-shadow: 0 1px 1px #0001;
+    font-size: 8px;
+    /* Aumentato per leggibilità */
 }
 
 .seat input[type="checkbox"] {
@@ -1418,46 +1440,56 @@ body {
 }
 
 .legend {
-    margin: 18px 0 18px 0;
+    margin: 12.6px 0 12.6px 0;
+    /* 70% di 18px originali */
     text-align: left;
     width: 100%;
     display: flex;
     justify-content: center;
-    gap: 18px;
+    gap: 12.6px;
+    /* 70% di 18px originali */
 }
 
 .legend .seat {
-    margin: 0 4px 0 0;
-    /* Ridotto del 50% da 8px */
-    width: 14px;
-    /* Ridotto del 50% da 28px */
-    height: 14px;
-    /* Ridotto del 50% da 28px */
-    line-height: 14px;
-    /* Ridotto del 50% da 28px */
-    font-size: 8px;
-    /* Ridotto del 50% da 0.9em */
-    border-radius: 3px;
-    /* Ridotto del 50% da 5px */
+    margin: 0 5.6px 0 0;
+    /* 70% di 8px originali */
+    width: 19.6px;
+    /* 70% di 28px originali */
+    height: 19.6px;
+    /* 70% di 28px originali */
+    line-height: 19.6px;
+    /* 70% di 28px originali */
+    font-size: 9px;
+    /* Aumentato per leggibilità */
+    border-radius: 4px;
+    /* 70% di 5px originali */
     box-shadow: none;
     display: inline-block;
 }
 
 .selected-seats-box {
-    min-height: 38px;
-    margin-bottom: 18px;
+    min-height: 24px;
+    /* Ridotto da 38px */
+    margin-bottom: 9px;
+    /* Ridotto da 18px */
     background: #f3f3f3;
-    border-radius: 6px;
-    padding: 8px 10px;
+    border-radius: 4px;
+    /* Ridotto da 6px */
+    padding: 4px 6px;
+    /* Ridotto da 8px 10px */
     font-weight: bold;
     text-align: center;
     color: #333;
     width: 100%;
+    font-size: 0.85em;
+    /* Aggiunto per testo più piccolo */
 }
 
 .total-box {
-    margin: 18px 0 18px 0;
-    font-size: 1.1em;
+    margin: 9px 0 9px 0;
+    /* Ridotto da 18px */
+    font-size: 1em;
+    /* Ridotto da 1.1em */
     font-weight: bold;
     text-align: center;
     color: #e53935;
@@ -1466,9 +1498,12 @@ body {
 
 .btn-book {
     width: 100%;
-    padding: 12px 0;
-    font-size: 1.1em;
-    border-radius: 6px;
+    padding: 8px 0;
+    /* Ridotto da 12px 0 */
+    font-size: 1em;
+    /* Ridotto da 1.1em */
+    border-radius: 4px;
+    /* Ridotto da 6px */
     border: none;
     background: #e53935;
     color: #fff;
@@ -1482,26 +1517,28 @@ body {
 }
 
 .seatmap-corridor-horizontal {
-    height: 9px;
-    /* Ridotto del 50% da 18px */
+    height: 12.6px;
+    /* 70% di 18px originali */
     width: 100%;
     display: block;
 }
 
 .seatmap-corridor-vertical {
     display: inline-block;
-    width: 9px;
-    /* Ridotto del 50% da 18px */
+    width: 12.6px;
+    /* 70% di 18px originali */
     height: 1px;
 }
 
 @media (max-width: 900px) {
     .booking-main {
-        max-width: 98vw;
+        max-width: 95vw;
+        /* Ridotto da 98vw */
     }
 
     .booking-side {
-        max-width: 98vw;
+        max-width: 95vw;
+        /* Ridotto da 98vw */
     }
 }
 
@@ -1518,15 +1555,53 @@ body {
     }
 
     .seatmap {
-        padding: 6px 1vw;
-        /* Ridotto del 50% da 12px 2vw */
-        min-width: 160px;
-        /* Ridotto del 50% da 320px */
+        padding: 8.4px 1.4vw;
+        min-width: 224px;
+        /* Aumentato per contenere tutti i posti */
+        width: max-content;
+        /* Permette larghezza variabile */
     }
 
     .seatmap-wrapper {
-        margin-top: 6px;
-        /* Ridotto del 50% da 12px */
+        margin-top: 8.4px;
+        width: 100%;
+        overflow-x: auto;
+        overflow-y: hidden;
+        /* Forza scroll orizzontale */
+        -webkit-overflow-scrolling: touch;
+        /* Scroll fluido su iOS */
+        padding: 0 10px;
+        /* Padding laterale per comfort */
+        box-sizing: border-box;
+    }
+
+    /* Stili per scrollbar su mobile */
+    .seatmap-wrapper::-webkit-scrollbar {
+        height: 6px;
+    }
+
+    .seatmap-wrapper::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 3px;
+    }
+
+    .seatmap-wrapper::-webkit-scrollbar-thumb {
+        background: #c1c1c1;
+        border-radius: 3px;
+    }
+
+    .seatmap-wrapper::-webkit-scrollbar-thumb:hover {
+        background: #a8a8a8;
+    }
+
+    .booking-col {
+        padding: 8px 6px;
+    }
+
+    /* Assicura che le righe di posti non si rompano */
+    .seat-row {
+        flex-shrink: 0;
+        white-space: nowrap;
     }
 }
 
@@ -2638,5 +2713,43 @@ body {
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+    }
+}
+
+/* Regole aggiuntive per schermi molto piccoli - scroll orizzontale seatmap */
+@media (max-width: 480px) {
+    .seatmap-wrapper {
+        padding: 0 5px;
+        /* Padding ridotto per schermi piccoli */
+    }
+
+    .seatmap {
+        min-width: 280px;
+        /* Larghezza minima per contenere tutti i posti */
+    }
+
+    /* Indicatore visivo per lo scroll */
+    .seatmap-wrapper::before {
+        content: "← Scorri per vedere tutti i posti →";
+        position: sticky;
+        left: 0;
+        top: 0;
+        background: rgba(0, 0, 0, 0.7);
+        color: white;
+        font-size: 10px;
+        padding: 4px 8px;
+        border-radius: 4px;
+        z-index: 10;
+        margin-bottom: 5px;
+        text-align: center;
+        display: block;
+        width: fit-content;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    /* Nasconde l'indicatore dopo il primo scroll */
+    .seatmap-wrapper.scrolled::before {
+        display: none;
     }
 }

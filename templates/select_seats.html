@@ -1,13 +1,13 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h2 style="text-align:center; margin-bottom: 24px;">SELEZIONA I POSTI</h2>
+<h2 style="text-align:center; margin-bottom: 12px; font-size: 1.3em;">SELEZIONA I POSTI</h2>
 
 <div>
   <form method="post" id="seats-form" style="display: flex; width: 100%;">
     <!-- Colonna 1: Piantina -->
     <div class="booking-col booking-main">
-      <h2 style="text-align:center; margin-bottom: 12px;">PALCOSCENICO</h2>
+      <h3 style="text-align:center; margin-bottom: 6px; font-size: 1.1em;">PALCOSCENICO</h3>
       <div class="seatmap-wrapper">
         <div class="seatmap">
           {% for row_letter in row_letters %}
@@ -39,9 +39,9 @@
 
     <!-- Colonna 2: Info evento, stato, legenda, form -->
     <div class="booking-col booking-side">
-      <h2 style="text-align:center;">{{ event.title }}</h2>
-      <div style="color:#555; margin-bottom:10px; text-align:center;">Data: {{ event.date }}</div>
-      <div style="color:#555; margin-bottom:10px; text-align:center;">Orario: {{ event.time }}</div>
+      <h3 style="text-align:center; margin-bottom: 6px; font-size: 1em;">{{ event.title }}</h3>
+      <div style="color:#555; margin-bottom:5px; text-align:center; font-size: 0.85em;">{{ event.date }}</div>
+      <div style="color:#555; margin-bottom:5px; text-align:center; font-size: 0.85em;">{{ event.time }}</div>
       {% if event.poster_url %}
       <img src="{{ event.poster_url }}" alt="Locandina evento" class="event-poster">
       {% else %}
@@ -50,13 +50,13 @@
       <div id="selected-seats" class="selected-seats-box">
         Nessun posto selezionato.
       </div>
-      <div class="form-group">
-        <label for="name"><b>Nome:</b></label>
-        <input type="text" id="name" name="name" required>
+      <div class="form-group" style="margin-bottom: 9px;">
+        <label for="name" style="font-size: 0.9em; margin-bottom: 3px;"><b>Nome:</b></label>
+        <input type="text" id="name" name="name" required style="padding: 6px 8px; font-size: 0.9em;">
       </div>
-      <div class="form-group">
-        <label for="email"><b>Email:</b></label>
-        <input type="email" id="email" name="email" required>
+      <div class="form-group" style="margin-bottom: 9px;">
+        <label for="email" style="font-size: 0.9em; margin-bottom: 3px;"><b>Email:</b></label>
+        <input type="email" id="email" name="email" required style="padding: 6px 8px; font-size: 0.9em;">
       </div>
       <div class="total-box">
         Totale: <span id="total-price">0</span> €
@@ -125,6 +125,28 @@
     infoMessage.style.cssText = 'font-size: 0.9em; color: #666; margin-top: 8px; text-align: center;';
     infoMessage.textContent = `Massimo ${MAX_SEATS} posti per acquisto`;
     selectedSeatsDiv.parentElement.insertBefore(infoMessage, selectedSeatsDiv.nextSibling);
+
+    // Gestione scroll orizzontale su mobile
+    const seatmapWrapper = document.querySelector('.seatmap-wrapper');
+    if (seatmapWrapper && window.innerWidth <= 480) {
+      let hasScrolled = false;
+
+      seatmapWrapper.addEventListener('scroll', function () {
+        if (!hasScrolled && this.scrollLeft > 10) {
+          hasScrolled = true;
+          this.classList.add('scrolled');
+        }
+      });
+
+      // Aggiunge touch feedback per scroll
+      seatmapWrapper.addEventListener('touchstart', function () {
+        this.style.transition = 'none';
+      });
+
+      seatmapWrapper.addEventListener('touchend', function () {
+        this.style.transition = 'transform 0.3s ease';
+      });
+    }
   });
 </script>
 {% endblock %}
