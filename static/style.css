@@ -2412,9 +2412,9 @@ body {
     color: var(--text-primary);
 }
 
-/* QUICK VALIDATION BUTTON STYLES */
-.btn-validate-quick {
-    background: linear-gradient(135deg, var(--success-color), var(--success-light));
+/* QUICK MARK-PAID BUTTON STYLES */
+.btn-mark-paid-quick {
+    background: linear-gradient(135deg, #2E8B57, #32CD32);
     color: var(--text-inverse);
     border: none;
     border-radius: 50%;
@@ -2430,25 +2430,18 @@ body {
     font-weight: 600;
 }
 
-.btn-validate-quick:hover {
-    background: linear-gradient(135deg, var(--success-dark), var(--success-color));
+.btn-mark-paid-quick:hover {
+    background: linear-gradient(135deg, #228B22, #2E8B57);
     transform: translateY(-2px) scale(1.1);
     box-shadow: var(--shadow-md);
 }
 
-.btn-validate-quick:active {
+.btn-mark-paid-quick:active {
     transform: translateY(0) scale(1.05);
     box-shadow: var(--shadow-xs);
 }
 
-.validate-done {
-    color: var(--success-color);
-    font-size: 1.2em;
-    display: inline-block;
-    opacity: 0.7;
-}
-
-.validate-form {
+.mark-paid-form {
     display: flex;
     justify-content: center;
     align-items: center;

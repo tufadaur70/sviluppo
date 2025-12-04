@@ -71,9 +71,6 @@
                                     <option value="3" {% if booking.status==3 %}selected{% endif %}>
                                         🔵 Prenotato (Booked) - Pagamento in contanti alla cassa
                                     </option>
-                                    <option value="4" {% if booking.status==4 %}selected{% endif %}>
-                                        ✅ Validato (Validated) - Biglietto verificato all'ingresso
-                                    </option>
                                 </select>
                                 <div class="form-text">
                                     Seleziona lo stato appropriato in base al tipo di transazione
@@ -90,8 +87,6 @@
                             <span class="badge badge-paid">🟢 Pagato</span> - Pagamento completato online
                             {% elif booking.status == 3 %}
                             <span class="badge badge-validated">🔵 Prenotato</span> - Pagamento in contanti
-                            {% elif booking.status == 4 %}
-                            <span class="badge badge-paid">✅ Validato</span> - Biglietto verificato
                             {% else %}
                             <span class="badge badge-unknown">❓ Sconosciuto</span>
                             {% endif %}
@@ -126,7 +121,6 @@
                         <div class="col-md-6">
                             <ul class="list-unstyled mb-0">
                                 <li><strong>🔵 Prenotato:</strong> Prenotazione admin con pagamento in contanti</li>
-                                <li><strong>✅ Validato:</strong> Biglietto verificato all'ingresso dell'evento</li>
                             </ul>
                         </div>
                     </div>

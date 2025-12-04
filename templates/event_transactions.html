@@ -19,7 +19,7 @@
                 <th>Email/Note</th>
                 <th>Posti</th>
                 <th>Stato</th>
-                <th>Valida</th>
+                <th>Rendi Pagato</th>
                 <th>Azioni</th>
             </tr>
         </thead>
@@ -44,18 +44,16 @@
                     {% endif %}
                 </td>
                 <td>
-                    {% if t.status in [2,3] %}
-                    <form method="post" action="{{ url_for('validate_ticket', booking_id=t.id) }}"
-                        class="d-inline validate-form">
-                        <button type="submit" class="btn-validate-quick" title="Valida biglietto"
-                            onclick="return confirm('Validare questo biglietto?')">
-                            ✅
+                    {% if t.status == 3 %}
+                    <form method="post" action="{{ url_for('mark_paid', booking_id=t.id) }}"
+                        class="d-inline mark-paid-form">
+                        <button type="submit" class="btn-mark-paid-quick" title="Rendi Pagato"
+                            onclick="return confirm('Rendere pagato questo biglietto prenotato?')">
+                            💰
                         </button>
                     </form>
-                    {% elif t.status == 4 %}
-                    <span class="validate-done" title="Già validato"></span>
                     {% else %}
-                    <span class="text-muted" title="Non validabile"></span>
+                    <span class="text-muted">-</span>
                     {% endif %}
                 </td>
                 <td>
@@ -63,12 +61,12 @@
                         <select class="action-select" data-booking-id="{{ t.id }}" data-status="{{ t.status }}">
                             <option value=""></option>
                             <option value="edit">Modifica</option>
-                            {% if t.status in [2,3,4] %}
+                            {% if t.status in [2,4] %}
                             <option value="pdf">PDF Biglietto</option>
                             <option value="email">Reinvia Email</option>
-                            {% endif %}\
-                            {% if t.status in [2,3] %}
-                            <option value="validate">Valida</option>
+                            {% endif %}
+                            {% if t.status == 3 %}
+                            <option value="mark_paid">Pagato</option>
                             {% endif %}
                             <option value="delete">Elimina</option>
                         </select>
@@ -86,8 +84,8 @@
 </div>
 
 <!-- Form nascosti per le azioni -->
-<form id="validate-form" method="post" style="display:none;">
-    <input type="hidden" name="booking_id" id="validate-booking-id">
+<form id="mark-paid-form" method="post" style="display:none;">
+    <input type="hidden" name="booking_id" id="mark-paid-booking-id">
 </form>
 
 <form id="delete-form" method="post" style="display:none;">
@@ -129,10 +127,10 @@
                         }
                         break;
 
-                    case 'validate':
-                        if (confirm('Validare questo biglietto?')) {
-                            const form = document.getElementById('validate-form');
-                            form.action = `/validate_ticket/${bookingId}`;
+                    case 'mark_paid':
+                        if (confirm('Rendere pagato questo biglietto prenotato?')) {
+                            const form = document.getElementById('mark-paid-form');
+                            form.action = `/mark_paid/${bookingId}`;
                             form.submit();
                         }
                         break;

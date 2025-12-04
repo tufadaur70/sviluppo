@@ -459,20 +459,21 @@ def resend_email(booking_id):
     
     return redirect(request.referrer or url_for('dashboard'))
 
-@app.route('/validate_ticket/<int:booking_id>', methods=['POST'])
+@app.route('/mark_paid/<int:booking_id>', methods=['POST'])
 @login_required
-def validate_ticket(booking_id):
-    """Reinvia ticket via email"""
+def mark_paid(booking_id):
+    """Marca un biglietto prenotato come pagato"""
     booking = get_booking_by_id(booking_id)
     if not booking:
         flash('Prenotazione non trovata.', 'danger')
         return redirect(request.referrer or url_for('dashboard'))
     
-    if booking['status'] not in (2, 3):
-        flash('Solo le prenotazioni pagate o prenotate possono essere validate.', 'warning')
+    if booking['status'] != 3:
+        flash('Solo le prenotazioni in stato "prenotato" possono essere marchiate come pagate.', 'warning')
         return redirect(request.referrer or url_for('dashboard'))
     
-    update_booking_status(booking_id , 4)
+    update_booking_status(booking_id , 2)
+    flash('Prenotazione marcata come pagata con successo.', 'success')
     return redirect(request.referrer or url_for('dashboard'))
 
 @app.route('/edit_transaction/<int:booking_id>', methods=['GET', 'POST'])
