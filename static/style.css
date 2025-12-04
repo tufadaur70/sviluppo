@@ -775,37 +775,37 @@ body {
 }
 
 /* OTTIMIZZAZIONE COLONNE TABELLA TRANSAZIONI */
-.table th:nth-child(1) {
+.table:not(.dashboard-table) th:nth-child(1) {
     width: 60px;
 }
 
 /* ID */
-.table th:nth-child(2) {
+.table:not(.dashboard-table) th:nth-child(2) {
     width: 150px;
 }
 
 /* Nome */
-.table th:nth-child(3) {
+.table:not(.dashboard-table) th:nth-child(3) {
     width: 180px;
 }
 
 /* Email */
-.table th:nth-child(4) {
+.table:not(.dashboard-table) th:nth-child(4) {
     width: 100px;
 }
 
 /* N° Posti */
-.table th:nth-child(5) {
+.table:not(.dashboard-table) th:nth-child(5) {
     width: 100px;
 }
 
 /* Stato */
-.table th:nth-child(6) {
+.table:not(.dashboard-table) th:nth-child(6) {
     width: 120px;
 }
 
 /* Azione Rapida */
-.table th:nth-child(7) {
+.table:not(.dashboard-table) th:nth-child(7) {
     width: 150px;
 }
 
@@ -2684,13 +2684,13 @@ body {
 
 /* Azioni */
 
-/* Dashboard Table (8 columns) */
+/* Dashboard Table (8 columns) - OTTIMIZZAZIONE */
 .dashboard-table .table th:nth-child(1),
 .table-wrapper:has(.dashboard-table) .table th:nth-child(1) {
-    width: 25%;
+    width: 35%;
 }
 
-/* Evento */
+/* Evento - Aumentato spazio */
 .dashboard-table .table th:nth-child(2),
 .table-wrapper:has(.dashboard-table) .table th:nth-child(2) {
     width: 12%;
@@ -2699,37 +2699,37 @@ body {
 /* Data */
 .dashboard-table .table th:nth-child(3),
 .table-wrapper:has(.dashboard-table) .table th:nth-child(3) {
-    width: 10%;
+    width: 8%;
 }
 
-/* Stato */
+/* Stato - Ridotto */
 .dashboard-table .table th:nth-child(4),
 .table-wrapper:has(.dashboard-table) .table th:nth-child(4) {
-    width: 10%;
+    width: 8%;
 }
 
-/* Venduti */
+/* Venduti - Ridotto */
 .dashboard-table .table th:nth-child(5),
 .table-wrapper:has(.dashboard-table) .table th:nth-child(5) {
-    width: 10%;
+    width: 8%;
 }
 
-/* Prenotati */
+/* Prenotati - Ridotto */
 .dashboard-table .table th:nth-child(6),
 .table-wrapper:has(.dashboard-table) .table th:nth-child(6) {
-    width: 11%;
+    width: 9.5%;
 }
 
-/* Elenco */
+/* Elenco - Ridotto */
 .dashboard-table .table th:nth-child(7),
 .table-wrapper:has(.dashboard-table) .table th:nth-child(7) {
-    width: 11%;
+    width: 9.5%;
 }
 
-/* Prenota */
+/* Prenota - Ridotto */
 .dashboard-table .table th:nth-child(8),
 .table-wrapper:has(.dashboard-table) .table th:nth-child(8) {
-    width: 11%;
+    width: 10%;
 }
 
 /* Azioni */
