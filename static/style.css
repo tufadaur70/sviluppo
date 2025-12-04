@@ -1338,9 +1338,11 @@ body {
 
 .seatmap {
     width: max-content;
-    min-width: 400px;
+    min-width: 200px;
+    /* Ridotto da 400px */
     background: #f8f8f8;
-    padding: 32px 18px;
+    padding: 16px 9px;
+    /* Ridotto da 32px 18px */
     border-radius: 12px;
     margin-bottom: 20px;
     box-shadow: 0 1px 6px #0001;
@@ -1365,13 +1367,19 @@ body {
 
 .seat {
     display: inline-block;
-    width: 25px;
-    height: 25px;
-    margin: 2px 2px;
-    line-height: 25px;
+    width: 12.5px;
+    /* Ridotto del 50% da 25px */
+    height: 12.5px;
+    /* Ridotto del 50% da 25px */
+    margin: 1px 1px;
+    /* Ridotto del 50% da 2px 2px */
+    line-height: 12.5px;
+    /* Ridotto del 50% da 25px */
     text-align: center;
-    border-radius: 7px;
-    border: 1.5px solid #bbb;
+    border-radius: 4px;
+    /* Ridotto del 50% da 7px */
+    border: 1px solid #bbb;
+    /* Ridotto del 50% da 1.5px */
     font-weight: 500;
     background: #e0ffe0;
     color: #222;
@@ -1379,6 +1387,8 @@ body {
     cursor: pointer;
     position: relative;
     box-shadow: 0 1px 2px #0001;
+    font-size: 6px;
+    /* Aggiunto per testo leggibile */
 }
 
 .seat input[type="checkbox"] {
@@ -1417,12 +1427,18 @@ body {
 }
 
 .legend .seat {
-    margin: 0 8px 0 0;
-    width: 28px;
-    height: 28px;
-    line-height: 28px;
-    font-size: 0.9em;
-    border-radius: 5px;
+    margin: 0 4px 0 0;
+    /* Ridotto del 50% da 8px */
+    width: 14px;
+    /* Ridotto del 50% da 28px */
+    height: 14px;
+    /* Ridotto del 50% da 28px */
+    line-height: 14px;
+    /* Ridotto del 50% da 28px */
+    font-size: 8px;
+    /* Ridotto del 50% da 0.9em */
+    border-radius: 3px;
+    /* Ridotto del 50% da 5px */
     box-shadow: none;
     display: inline-block;
 }
@@ -1466,14 +1482,16 @@ body {
 }
 
 .seatmap-corridor-horizontal {
-    height: 18px;
+    height: 9px;
+    /* Ridotto del 50% da 18px */
     width: 100%;
     display: block;
 }
 
 .seatmap-corridor-vertical {
     display: inline-block;
-    width: 18px;
+    width: 9px;
+    /* Ridotto del 50% da 18px */
     height: 1px;
 }
 
@@ -1500,7 +1518,15 @@ body {
     }
 
     .seatmap {
-        padding: 12px 2vw;
+        padding: 6px 1vw;
+        /* Ridotto del 50% da 12px 2vw */
+        min-width: 160px;
+        /* Ridotto del 50% da 320px */
+    }
+
+    .seatmap-wrapper {
+        margin-top: 6px;
+        /* Ridotto del 50% da 12px */
     }
 }
 
