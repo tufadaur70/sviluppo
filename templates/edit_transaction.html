@@ -10,9 +10,7 @@
 
             <!-- Info evento -->
             <div class="card mb-4">
-                <div class="card-header">
-                    <h5 class="mb-0">📅 Informazioni Evento</h5>
-                </div>
+
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-6">
@@ -38,9 +36,7 @@
 
             <!-- Form modifica -->
             <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0">✏️ Modifica Dati Prenotazione</h5>
-                </div>
+
                 <div class="card-body">
                     <form method="post">
                         <div class="row mb-3">
@@ -62,18 +58,16 @@
                             <div class="col-md-12">
                                 <label for="status" class="form-label">Stato Prenotazione *</label>
                                 <select class="form-select" id="status" name="status" required>
-                                    <option value="1" {% if booking.status==1 %}selected{% endif %}>
-                                        🟡 In attesa (Pending) - Prenotazione non ancora pagata
-                                    </option>
+
                                     <option value="2" {% if booking.status==2 %}selected{% endif %}>
-                                        🟢 Pagato (Paid) - Pagamento online completato
+                                        🔵 Pagato
                                     </option>
                                     <option value="3" {% if booking.status==3 %}selected{% endif %}>
-                                        🔵 Prenotato (Booked) - Pagamento in contanti alla cassa
+                                        🟢 Prenotato
                                     </option>
                                 </select>
                                 <div class="form-text">
-                                    Seleziona lo stato appropriato in base al tipo di transazione
+                                    Seleziona lo stato
                                 </div>
                             </div>
                         </div>
@@ -82,11 +76,11 @@
                         <div class="alert alert-info mb-4">
                             <strong>Stato attuale:</strong>
                             {% if booking.status == 1 %}
-                            <span class="badge badge-pending">🟡 In attesa</span> - Prenotazione in sospeso
+                            <span class="badge badge-pending">In attesa</span> - Prenotazione in sospeso
                             {% elif booking.status == 2 %}
-                            <span class="badge badge-paid">🟢 Pagato</span> - Pagamento completato online
+                            <span class="badge badge-paid">🔵 Pagato</span> - Pagamento completato online
                             {% elif booking.status == 3 %}
-                            <span class="badge badge-validated">🔵 Prenotato</span> - Pagamento in contanti
+                            <span class="badge badge-validated">🟢 Prenotato</span> - Pagamento in contanti
                             {% else %}
                             <span class="badge badge-unknown">❓ Sconosciuto</span>
                             {% endif %}
@@ -106,26 +100,7 @@
             </div>
 
             <!-- Note informative -->
-            <div class="card mt-4">
-                <div class="card-header">
-                    <h6 class="mb-0">ℹ️ Note sui Stati</h6>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <ul class="list-unstyled mb-0">
-                                <li><strong>🟡 In attesa:</strong> Prenotazione creata ma non pagata</li>
-                                <li><strong>🟢 Pagato:</strong> Pagamento online completato via Stripe</li>
-                            </ul>
-                        </div>
-                        <div class="col-md-6">
-                            <ul class="list-unstyled mb-0">
-                                <li><strong>🔵 Prenotato:</strong> Prenotazione admin con pagamento in contanti</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
+
         </div>
     </div>
 </div>
