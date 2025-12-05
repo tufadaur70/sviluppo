@@ -46,6 +46,7 @@
             <select class="action-select-dashboard" data-event-id="{{ e.id }}" data-visible="{{ e.visible }}">
               <option value="">-- Azioni --</option>
               <option value="edit">✏️ Modifica</option>
+              <option value="print_tickets">🎫 Stampa Biglietti</option>
               {% if e.visible == 1 %}
               <option value="hide">🙈 Nascondi</option>
               {% else %}
@@ -90,6 +91,10 @@
         switch (action) {
           case 'edit':
             window.location.href = `/event/${eventId}/edit`;
+            break;
+
+          case 'print_tickets':
+            window.location.href = `/generate_individual_tickets_pdf/${eventId}`;
             break;
 
           case 'hide':

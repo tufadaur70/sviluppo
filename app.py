@@ -1,6 +1,6 @@
 import os
 import logging
-from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
+from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify, make_response
 import stripe
 from werkzeug.utils import secure_filename
 from werkzeug.exceptions import BadRequest, NotFound, InternalServerError
@@ -554,7 +554,6 @@ def generate_ticket_pdf_route(booking_id):
         filename = f"biglietto_{event['title'].replace(' ', '_')}_{booking['id']}.pdf"
         
         # Ritorna PDF come download
-        from flask import make_response
         response = make_response(pdf_data)
         response.headers['Content-Type'] = 'application/pdf'
         response.headers['Content-Disposition'] = f'attachment; filename="{filename}"'
@@ -590,7 +589,6 @@ def generate_event_summary_pdf_route(event_id):
         filename = f"riepilogo_{event['title'].replace(' ', '_')}.pdf"
         
         # Ritorna PDF come download
-        from flask import make_response
         response = make_response(pdf_data)
         response.headers['Content-Type'] = 'application/pdf'
         response.headers['Content-Disposition'] = f'attachment; filename="{filename}"'
@@ -600,6 +598,47 @@ def generate_event_summary_pdf_route(event_id):
     except Exception as e:
         logger.error(f'Errore generazione PDF riepilogo: {str(e)}')
         flash('Errore durante la generazione del PDF riepilogo.', 'error')
+        return redirect(url_for('dashboard'))
+
+@app.route('/generate_individual_tickets_pdf/<int:event_id>')
+@login_required
+def generate_individual_tickets_pdf_route(event_id):
+    """Genera PDF con biglietti individuali per ogni transazione (4 per foglio A4)"""
+    try:
+        event = get_event_by_id(event_id)
+        if not event:
+            flash('Evento non trovato.', 'error')
+            return redirect(url_for('dashboard'))
+        
+        # Ottieni tutte le transazioni dell'evento con status pagato o prenotato
+        bookings = get_event_transactions(event_id)
+        
+        # Filtra solo transazioni pagate o prenotate
+        valid_bookings = [b for b in bookings if b['status'] in [2, 3]]
+        
+        if not valid_bookings:
+            flash('Nessuna prenotazione valida trovata per questo evento.', 'warning')
+            return redirect(url_for('event_transactions', event_id=event_id))
+        
+        # Importa la nuova funzione
+        from pdf_generator import generate_individual_tickets_pdf
+        
+        # Genera PDF con biglietti individuali
+        pdf_data = generate_individual_tickets_pdf(valid_bookings, event)
+        
+        # Prepara nome file
+        filename = f"biglietti_{event['title'].replace(' ', '_')}_{len(valid_bookings)}_tickets.pdf"
+        
+        # Ritorna PDF come download
+        response = make_response(pdf_data)
+        response.headers['Content-Type'] = 'application/pdf'
+        response.headers['Content-Disposition'] = f'attachment; filename="{filename}"'
+        
+        return response
+        
+    except Exception as e:
+        logger.error(f'Errore generazione PDF biglietti individuali: {str(e)}')
+        flash('Errore durante la generazione dei biglietti individuali.', 'error')
         return redirect(url_for('dashboard'))
 
 # ---------- AVVIO APPLICAZIONE ----------

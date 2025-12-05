@@ -400,3 +400,331 @@ def generate_tickets_summary_pdf(bookings, event):
     doc.build(story)
     buffer.seek(0)
     return buffer.getvalue()
+
+
+def generate_event_summary_pdf(event, transactions):
+    """Genera un PDF di riepilogo con tutti i biglietti per un evento"""
+    from reportlab.lib.pagesizes import A4
+    from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
+    from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+    from reportlab.lib.units import cm
+    from reportlab.lib import colors
+    from datetime import datetime
+    import io
+    
+    buffer = io.BytesIO()
+    doc = SimpleDocTemplate(buffer, pagesize=A4, topMargin=2*cm, bottomMargin=2*cm)
+    
+    # Stili
+    styles = getSampleStyleSheet()
+    title_style = ParagraphStyle(
+        'CustomTitle',
+        parent=styles['Heading1'],
+        fontSize=18,
+        spaceAfter=30,
+        alignment=1,  # Centrato
+        textColor=colors.HexColor('#2d3748')
+    )
+    
+    header_style = ParagraphStyle(
+        'CustomHeader',
+        parent=styles['Heading2'],
+        fontSize=14,
+        spaceAfter=20,
+        textColor=colors.HexColor('#744210')
+    )
+    
+    # Contenuto del documento
+    story = []
+    
+    # Titolo
+    story.append(Paragraph(f"RIEPILOGO BIGLIETTI - {event['title'].upper()}", title_style))
+    story.append(Spacer(1, 0.5*cm))
+    
+    # Informazioni evento
+    event_info = [
+        ['Data:', event['date']],
+        ['Orario:', event['time']],
+        ['Prezzo:', f"€ {event['price']:.2f}"],
+        ['Data stampa:', datetime.now().strftime('%d/%m/%Y %H:%M')]
+    ]
+    
+    event_table = Table(event_info, colWidths=[4*cm, 8*cm])
+    event_table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, -1), colors.HexColor('#f8fafc')),
+        ('TEXTCOLOR', (0, 0), (-1, -1), colors.HexColor('#2d3748')),
+        ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+        ('FONTNAME', (0, 0), (-1, -1), 'Helvetica'),
+        ('FONTSIZE', (0, 0), (-1, -1), 10),
+        ('FONTNAME', (0, 0), (0, -1), 'Helvetica-Bold'),
+        ('GRID', (0, 0), (-1, -1), 0.5, colors.HexColor('#e2e8f0')),
+        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+    ]))
+    
+    story.append(event_table)
+    story.append(Spacer(1, 1*cm))
+    
+    # Statistiche generali
+    total_tickets = 0
+    total_amount = 0
+    status_counts = {'In attesa': 0, 'Pagato': 0, 'Prenotato': 0}
+    
+    for t in transactions:
+        seats_count = len(t['seats'].split(',')) if t['seats'] else 0
+        total_tickets += seats_count
+        total_amount += seats_count * event['price']
+        
+        if t['status'] == 1:
+            status_counts['In attesa'] += 1
+        elif t['status'] == 2:
+            status_counts['Pagato'] += 1
+        elif t['status'] == 3:
+            status_counts['Prenotato'] += 1
+    
+    story.append(Paragraph("STATISTICHE GENERALI", header_style))
+    
+    stats_data = [
+        ['Totale transazioni:', str(len(transactions))],
+        ['Totale biglietti:', str(total_tickets)],
+        ['Importo totale:', f"€ {total_amount:.2f}"],
+        ['Transazioni pagate:', str(status_counts['Pagato'])],
+        ['Transazioni prenotate:', str(status_counts['Prenotato'])],
+        ['Transazioni in attesa:', str(status_counts['In attesa'])]
+    ]
+    
+    stats_table = Table(stats_data, colWidths=[5*cm, 4*cm])
+    stats_table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, -1), colors.HexColor('#f0fff4')),
+        ('TEXTCOLOR', (0, 0), (-1, -1), colors.HexColor('#2d3748')),
+        ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+        ('FONTNAME', (0, 0), (-1, -1), 'Helvetica'),
+        ('FONTSIZE', (0, 0), (-1, -1), 10),
+        ('FONTNAME', (0, 0), (0, -1), 'Helvetica-Bold'),
+        ('GRID', (0, 0), (-1, -1), 0.5, colors.HexColor('#38a169')),
+        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+    ]))
+    
+    story.append(stats_table)
+    story.append(Spacer(1, 1*cm))
+    
+    # Elenco dettagliato transazioni
+    story.append(Paragraph("ELENCO DETTAGLIATO TRANSAZIONI", header_style))
+    
+    # Intestazione tabella
+    table_data = [['ID', 'Nome', 'Email', 'Stato', 'N° Posti', 'Posti Assegnati', 'Importo']]
+    
+    for t in transactions:
+        seats_count = len(t['seats'].split(',')) if t['seats'] else 0
+        amount = seats_count * event['price']
+        
+        # Stato descrittivo
+        status_text = {
+            1: 'In attesa',
+            2: 'Pagato', 
+            3: 'Prenotato'
+        }.get(t['status'], 'Sconosciuto')
+        
+        # Formatta posti (max 50 caratteri per riga)
+        seats_text = t['seats'] if t['seats'] else 'Nessuno'
+        if len(seats_text) > 50:
+            seats_text = seats_text[:47] + '...'
+        
+        table_data.append([
+            str(t['id']),
+            t['name'][:20] + '...' if len(t['name']) > 20 else t['name'],
+            t['email'][:25] + '...' if len(t['email']) > 25 else t['email'],
+            status_text,
+            str(seats_count),
+            seats_text,
+            f"€ {amount:.2f}"
+        ])
+    
+    # Crea tabella transazioni
+    transactions_table = Table(table_data, colWidths=[1*cm, 3*cm, 4*cm, 2*cm, 1.5*cm, 4*cm, 1.5*cm])
+    transactions_table.setStyle(TableStyle([
+        # Intestazione
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#2d3748')),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('FONTSIZE', (0, 0), (-1, 0), 9),
+        
+        # Righe dati
+        ('BACKGROUND', (0, 1), (-1, -1), colors.white),
+        ('TEXTCOLOR', (0, 1), (-1, -1), colors.HexColor('#2d3748')),
+        ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
+        ('FONTSIZE', (0, 1), (-1, -1), 8),
+        
+        # Bordi e allineamento
+        ('GRID', (0, 0), (-1, -1), 0.5, colors.HexColor('#e2e8f0')),
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+        
+        # Allineamento colonne specifiche
+        ('ALIGN', (1, 1), (2, -1), 'LEFT'),  # Nome, Email a sinistra
+        ('ALIGN', (5, 1), (5, -1), 'LEFT'),  # Posti a sinistra
+    ]))
+    
+    story.append(transactions_table)
+    
+    # Genera il PDF
+    doc.build(story)
+    
+    return buffer.getvalue()
+
+def generate_individual_tickets_pdf(bookings, event):
+    """
+    Genera un PDF con biglietti individuali per ogni transazione.
+    Massimo 3 biglietti per foglio A4 per permettere il taglio e la consegna ai clienti.
+    
+    Args:
+        bookings: Lista di prenotazioni
+        event: Dict con i dati dell'evento
+    
+    Returns:
+        bytes: Contenuto del PDF generato
+    """
+    
+    buffer = io.BytesIO()
+    
+    # Documento A4 con margini ridotti per massimizzare lo spazio
+    doc = SimpleDocTemplate(
+        buffer,
+        pagesize=A4,
+        rightMargin=0.3*inch,
+        leftMargin=0.3*inch,
+        topMargin=0.3*inch,
+        bottomMargin=0.3*inch
+    )
+    
+    styles = getSampleStyleSheet()
+    
+    # Stili ottimizzati per biglietti piccoli
+    ticket_title_style = ParagraphStyle(
+        'TicketTitleSmall',
+        parent=styles['Title'],
+        fontSize=16,
+        textColor=colors.HexColor('#2B4C8C'),
+        alignment=TA_CENTER,
+        spaceAfter=8,
+        fontName='Helvetica-Bold',
+        backColor=colors.HexColor('#F8F9FA'),
+        borderWidth=1,
+        borderColor=colors.HexColor('#2B4C8C'),
+        borderPadding=6
+    )
+    
+    event_title_style = ParagraphStyle(
+        'EventTitleSmall',
+        parent=styles['Normal'],
+        fontSize=14,
+        textColor=colors.HexColor('#8B0000'),
+        alignment=TA_CENTER,
+        spaceAfter=6,
+        fontName='Helvetica-Bold'
+    )
+    
+    detail_style = ParagraphStyle(
+        'DetailSmall',
+        parent=styles['Normal'],
+        fontSize=10,
+        textColor=colors.HexColor('#2d3748'),
+        alignment=TA_LEFT,
+        fontName='Helvetica'
+    )
+    
+    code_style = ParagraphStyle(
+        'CodeStyle',
+        parent=styles['Normal'],
+        fontSize=12,
+        textColor=colors.HexColor('#8B0000'),
+        alignment=TA_CENTER,
+        fontName='Helvetica-Bold',
+        backColor=colors.HexColor('#F0F0F0'),
+        borderWidth=1,
+        borderColor=colors.HexColor('#8B0000'),
+        borderPadding=4
+    )
+    
+    story = []
+    
+    # Genera biglietti per ogni prenotazione
+    tickets_per_page = 0
+    
+    for i, booking in enumerate(bookings):
+        # Calcola prezzo totale per questa prenotazione
+        seats_count = len(booking['seats'].split(','))
+        total_price = event['price'] * seats_count
+        
+        # Contenuto del singolo biglietto
+        ticket_elements = []
+        
+        # Header biglietto
+        ticket_elements.append(Paragraph("🎭 TEATRO SAN RAFFAELE 🎭", ticket_title_style))
+        ticket_elements.append(Spacer(1, 6))
+        ticket_elements.append(Paragraph(f"<b>{event['title']}</b>", event_title_style))
+        ticket_elements.append(Spacer(1, 8))
+        
+        # Informazioni essenziali in tabella compatta
+        ticket_data = [
+            ['👤 Nome:', booking['name'][:25] + '...' if len(booking['name']) > 25 else booking['name']],
+            ['📅 Data:', event['date']],
+            ['⏰ Orario:', event['time']],
+            ['🎫 Posti:', booking['seats']],
+            ['💰 Totale:', f"€ {total_price:.2f}"],
+        ]
+        
+        ticket_table = Table(ticket_data, colWidths=[1.2*inch, 2.8*inch])
+        ticket_table.setStyle(TableStyle([
+            ('FONTNAME', (0, 0), (-1, -1), 'Helvetica'),
+            ('FONTSIZE', (0, 0), (-1, -1), 10),
+            ('FONTNAME', (0, 0), (0, -1), 'Helvetica-Bold'),
+            ('TEXTCOLOR', (0, 0), (0, -1), colors.HexColor('#2B4C8C')),
+            ('TEXTCOLOR', (1, 0), (1, -1), colors.HexColor('#2d3748')),
+            ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+            ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+            ('PADDING', (0, 0), (-1, -1), 4),
+            ('LINEBELOW', (0, 0), (-1, -2), 0.5, colors.HexColor('#E0E0E0')),
+        ]))
+        
+        ticket_elements.append(ticket_table)
+        ticket_elements.append(Spacer(1, 8))
+        
+        # Codice biglietto prominente
+        ticket_elements.append(Paragraph(f"Codice: #{booking['id']:05d}", code_style))
+        ticket_elements.append(Spacer(1, 6))
+        
+        # Note per il controllo
+        note_style = ParagraphStyle(
+            'NoteStyle',
+            parent=styles['Normal'],
+            fontSize=8,
+            textColor=colors.HexColor('#666666'),
+            alignment=TA_CENTER,
+            fontName='Helvetica-Oblique'
+        )
+        ticket_elements.append(Paragraph("Presentare all'ingresso • Arrivare 20 min prima", note_style))
+        
+        # Crea un frame per ogni biglietto con bordo
+        from reportlab.platypus import KeepTogether
+        ticket_frame = KeepTogether(ticket_elements)
+        
+        # Aggiungi il biglietto alla storia
+        story.append(ticket_frame)
+        
+        tickets_per_page += 1
+        
+        # Aggiungi spazio tra i biglietti o nuova pagina
+        if tickets_per_page < 3 and i < len(bookings) - 1:
+            # Spazio tra biglietti sulla stessa pagina
+            story.append(Spacer(1, 0.8*inch))
+        elif tickets_per_page == 3 and i < len(bookings) - 1:
+            # Nuova pagina dopo 3 biglietti
+            from reportlab.platypus import PageBreak
+            story.append(PageBreak())
+            tickets_per_page = 0
+    
+    # Genera il PDF
+    doc.build(story)
+    
+    buffer.seek(0)
+    return buffer.getvalue()
